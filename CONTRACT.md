@@ -7,7 +7,7 @@
 - **Contract identifier:** `goreecloud.policy/0.1`
 - **Last updated:** September 16, 2026
 - **Classification:** Internal
-- **Repository:** `GoreeCloud/goreecloud-policy`
+- **Repository:** `GoreeCloud/policy`
 - **Platform Contract baseline:** `0.4`
 - **Integral Platform System authority:** `Instructions — Integral Platform Systems v3.0`
 - **Implementation status:** Contract foundation only; this document does not claim a deployed or accepted production runtime.
