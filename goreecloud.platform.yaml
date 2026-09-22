@@ -1,0 +1,129 @@
+schema_version: '0.4'
+component:
+  type: service
+  id: goreecloud-policy
+  product_name: GoreeCloud Policy
+  repository: GoreeCloud/policy
+lifecycle: development
+version: 0.1.0-dev
+supported_platforms:
+  - linux
+api:
+  versions:
+    - v1
+  endpoints:
+    - name: health
+      url: /healthz
+      purpose: Development reference-runtime process health.
+    - name: readiness
+      url: /readyz
+      purpose: Development evaluator readiness; not production acceptance.
+    - name: evaluate
+      url: /v1/evaluate
+      purpose: Local reference policy evaluation contract.
+platform_systems:
+  manager:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Manager administration and lifecycle integration are required but not yet implemented.
+  privacy_shield:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - SPECIFICATIONS.md
+    notes: Privacy Shield remains the privacy-rule authority; a production adapter is not yet implemented.
+  wardveil_security:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - SPECIFICATIONS.md
+    notes: Wardveil remains the security-rule authority; a production adapter is not yet implemented.
+  everkeep:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Durable policy backup, restore, export, and recovery acceptance are not yet implemented.
+  glaze_ui:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - README.md
+    notes: The current foundation is a service/library with no user-facing interface; future administrative UI would require Glaze UI evaluation.
+  mesh:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Policy distribution and cross-component decision transport are not yet integrated with Mesh.
+    capabilities: []
+    dependencies: []
+    published_events: []
+    consumed_events: []
+  identity:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - SECURITY.md
+    notes: The reference runtime does not implement production GoreeCloud Identity authentication or authoritative actor context.
+  policy:
+    result: not-applicable-justified
+    version: 0.1.0-dev
+    evidence:
+      - src/goreecloud_policy/engine.py
+      - tests/test_policy.py
+    notes: This repository implements the GoreeCloud Policy authority itself; a separate Policy-to-Policy integration is not applicable.
+  observability:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Privacy-safe operational evidence publication to GoreeCloud Observability is not yet implemented.
+health:
+  health_endpoint: /healthz
+  readiness_endpoint: /readyz
+continuity:
+  backup:
+    required: true
+    requirements:
+      - Future durable policy definitions, versions, provenance, and configuration must be included in accepted Everkeep-aligned backup scope.
+  restore:
+    required: true
+    requirements:
+      - Future durable policy state must support clean-target restore verification before production acceptance.
+  export:
+    required: true
+    requirements:
+      - Policy definitions and provenance must remain portable in documented formats.
+  portability:
+    required: true
+    requirements:
+      - Evaluation contracts must remain implementation-independent and self-hostable.
+external_dependencies: []
+compatibility:
+  platform_contract: '0.4'
+  glaze_ui_required: null
+  requires:
+    - goreecloud-platform-contract==0.4
+  provides:
+    - goreecloud-policy-reference-evaluator-v1
+evidence:
+  acceptance_tests: []
+  release: []
+conformance:
+  status: nonconformant
+  validated_at: null
+  evidence:
+    - README.md
+    - SPECIFICATIONS.md
+    - src/goreecloud_policy/model.py
+    - src/goreecloud_policy/engine.py
+    - tests/test_policy.py
+  blockers:
+    - Component remains in Development and is not production accepted.
+    - Manager, Privacy Shield, Wardveil Security, Everkeep, Mesh, Identity, and Observability integrations remain blocked.
+    - Exact-head unit-test CI is source validation and is not recorded as accepted platform evidence until a governed evidence record exists.
+    - Durable policy lifecycle, signing, distribution, enforcement receipts, recovery, deployment, and production acceptance remain outstanding.
+    - Stable qualification remains outstanding.

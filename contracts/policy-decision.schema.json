@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goreecloud.com/contracts/policy/decision/v1",
+  "title": "GoreeCloud Policy decision",
+  "type": "object",
+  "required": ["decision", "policy_id", "policy_version", "authority", "subject", "resource", "action", "reason", "matched_rule_ids", "obligations", "evaluated_at", "fresh"],
+  "properties": {
+    "decision": {"enum": ["allow", "deny", "conditional", "defer", "indeterminate", "error"]},
+    "policy_id": {"type": "string"},
+    "policy_version": {"type": "string"},
+    "authority": {"type": "string"},
+    "subject": {"type": "string"},
+    "resource": {"type": "string"},
+    "action": {"type": "string"},
+    "reason": {"type": "string"},
+    "matched_rule_ids": {"type": "array", "items": {"type": "string"}},
+    "obligations": {"type": "array", "items": {"type": "string"}},
+    "evaluated_at": {"type": "string"},
+    "fresh": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

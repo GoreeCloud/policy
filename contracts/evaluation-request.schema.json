@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goreecloud.com/contracts/policy/evaluation-request/v1",
+  "title": "GoreeCloud Policy evaluation request",
+  "type": "object",
+  "required": ["policy_id", "policy_version", "authority", "subject", "resource", "action"],
+  "properties": {
+    "policy_id": {"type": "string", "minLength": 1},
+    "policy_version": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "minLength": 1},
+    "subject": {"type": "string", "minLength": 1},
+    "resource": {"type": "string", "minLength": 1},
+    "action": {"type": "string", "minLength": 1},
+    "context": {"type": "object"}
+  },
+  "additionalProperties": false
+}
