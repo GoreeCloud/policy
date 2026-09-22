@@ -4,7 +4,8 @@ GoreeCloud Policy is the shared policy-definition, evaluation, decision, distrib
 
 **Lifecycle:** Development  
 **Foundation version:** `0.1.0-dev`  
-**Platform Contract:** `0.4`
+**Platform Contract:** `0.4`  
+**License:** `AGPL-3.0-or-later`
 
 This repository now contains a bounded reference implementation of deterministic policy evaluation. It is intentionally **not** a production authorization service yet. Privacy Shield, Wardveil Security, GoreeCloud Identity, Everkeep, and other domain authorities retain ownership of the substantive facts and rules they produce.
 
@@ -31,6 +32,10 @@ The reference runtime binds to `127.0.0.1:8787` by default. Set `GOREECLOUD_POLI
 ```bash
 python -m unittest discover -s tests -v
 ```
+
+## License
+
+GoreeCloud Policy is licensed under `AGPL-3.0-or-later`. See `LICENSE`.
 
 See `SPECIFICATIONS.md`, `IMPLEMENTED-FEATURES.md`, `PLANNED-FEATURES.md`, and `goreecloud.platform.yaml` for the current evidence boundary.
 
