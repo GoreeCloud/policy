@@ -54,6 +54,20 @@ class PolicyTests(unittest.TestCase):
         })
         self.assertEqual(Decision.INDETERMINATE, evaluate(self.request(), [rule]).decision)
 
+    def test_missing_nullable_context_does_not_authorize(self):
+        rule = self.rule("null-tenant", "allow", tenant=None)
+        self.assertEqual(Decision.INDETERMINATE, evaluate(self.request(), [rule]).decision)
+
+    def test_explicit_nullable_context_matches(self):
+        rule = self.rule("null-tenant", "allow", tenant=None)
+        request = PolicyRequest.from_mapping({
+            "policy_id": "privacy.export", "policy_version": "1",
+            "authority": "privacy-shield", "subject": "service:test",
+            "resource": "record:1", "action": "export",
+            "context": {"tenant": None},
+        })
+        self.assertEqual(Decision.ALLOW, evaluate(request, [rule]).decision)
+
     def test_invalid_decision_rejected(self):
         with self.assertRaises(ValueError):
             self.rule("bad", "maybe", purpose="user-request")
