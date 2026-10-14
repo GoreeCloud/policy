@@ -23,7 +23,12 @@ def _matches(request: PolicyRequest, rule: PolicyRule) -> bool:
         or request.authority != rule.authority
     ):
         return False
-    return all(_request_value(request, key) == expected for key, expected in rule.when.items())
+    for key, expected in rule.when.items():
+        if key not in {"subject", "resource", "action"} and key not in request.context:
+            return False
+        if _request_value(request, key) != expected:
+            return False
+    return True
 
 
 def _result(request: PolicyRequest, decision: Decision, reason: str, rules: list[PolicyRule]) -> PolicyResult:
