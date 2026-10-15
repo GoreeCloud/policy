@@ -64,7 +64,9 @@ class PolicyRule:
     def from_mapping(cls, value: Mapping[str, Any]) -> "PolicyRule":
         if not isinstance(value, Mapping):
             raise ValueError("rule must be an object")
-        when = value.get("when", {})
+        if "when" not in value:
+            raise ValueError("rule.when must be explicitly provided")
+        when = value["when"]
         if not isinstance(when, Mapping):
             raise ValueError("rule.when must be an object")
         try:
