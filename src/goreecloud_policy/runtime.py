@@ -80,7 +80,7 @@ class Handler(BaseHTTPRequestHandler):
             rules = [PolicyRule.from_mapping(item) for item in raw_rules]
             result = evaluate(request, rules)
             self._json(200, result.to_dict())
-        except (ValueError, json.JSONDecodeError) as exc:
+        except (ValueError, json.JSONDecodeError, RecursionError) as exc:
             self._json(400, {"decision": Decision.ERROR.value, "error": "invalid_request", "message": str(exc)})
 
     def log_message(self, format: str, *args: object) -> None:
