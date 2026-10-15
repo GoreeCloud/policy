@@ -19,3 +19,5 @@ Implemented local-only `/healthz`, `/readyz`, and `/v1/evaluate` endpoints witho
 Added Contract 0.4 nine-system declaration, unit tests, and GitHub Actions validation.
 
 Development rule matching distinguishes absent context fields from explicitly present JSON null. Missing context cannot satisfy a nullable exact-match condition; explicit null remains matchable. Duplicate JSON keys and non-finite constants are rejected at loopback HTTP evaluation. These are source-only safeguards, not production rule-distribution or decision authority.
+
+Development parser rejects overflowing exponent floats; rule matching compares JSON boolean conditions without integer/boolean aliasing, including nested values.
