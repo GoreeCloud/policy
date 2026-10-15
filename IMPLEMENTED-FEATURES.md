@@ -27,3 +27,7 @@ Solo-maintainer review: omitted `rule.when` is rejected; an explicitly provided 
 ### Development HTTP request boundary — 2026-10-15
 
 Local-only API Host validation rejects DNS-rebinding Host aliases, browser Origin headers, and non-JSON POST media types. Existing local JSON requests still operate, and synthetic HTTP regressions cover all three rejections.
+
+### Concurrent stabilization audit — 2026-10-15
+
+Development API JSON responses now include Cache-Control: no-store and X-Content-Type-Options: nosniff; local HTTP regression verifies the response headers.
