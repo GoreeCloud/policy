@@ -21,3 +21,5 @@ Added Contract 0.4 nine-system declaration, unit tests, and GitHub Actions valid
 Development rule matching distinguishes absent context fields from explicitly present JSON null. Missing context cannot satisfy a nullable exact-match condition; explicit null remains matchable. Duplicate JSON keys and non-finite constants are rejected at loopback HTTP evaluation. These are source-only safeguards, not production rule-distribution or decision authority.
 
 Development parser rejects overflowing exponent floats; rule matching compares JSON boolean conditions without integer/boolean aliasing, including nested values.
+
+Solo-maintainer review: omitted `rule.when` is rejected; an explicitly provided empty object retains intentional broad-match semantics. Excessively nested JSON is rejected as HTTP 400 rather than causing an unhandled decoder recursion error. This remains a Development-only evaluator with no trusted external policy-provider integration.
