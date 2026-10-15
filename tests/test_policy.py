@@ -32,6 +32,14 @@ class PolicyTests(unittest.TestCase):
         self.assertEqual(Decision.ALLOW, result.decision)
         self.assertEqual(("allow-user-export",), result.matched_rule_ids)
 
+    def test_allow_result_is_explicitly_development_only(self):
+        result = evaluate(self.request(), [
+            self.rule("allow-local", "allow", purpose="user-request")
+        ]).to_dict()
+        self.assertEqual("allow", result["decision"])
+        self.assertEqual("development-reference-runtime", result["scope"])
+        self.assertIs(result["production_accepted"], False)
+
     def test_no_match_is_indeterminate_not_allow(self):
         result = evaluate(self.request(), [self.rule("other", "allow", purpose="different")])
         self.assertEqual(Decision.INDETERMINATE, result.decision)
