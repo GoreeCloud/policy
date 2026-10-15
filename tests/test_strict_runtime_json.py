@@ -51,6 +51,25 @@ class StrictRuntimeJsonTests(unittest.TestCase):
         finally:
             connection.close()
 
+    def test_valid_local_request_still_evaluates(self):
+        payload = {
+            "request": {
+                "policy_id": "development-check", "policy_version": "1",
+                "authority": "privacy-shield", "subject": "service:tester",
+                "resource": "resource:synthetic", "action": "read",
+                "context": {"purpose": "unit-test"},
+            },
+            "rules": [{
+                "rule_id": "explicit", "policy_id": "development-check",
+                "policy_version": "1", "authority": "privacy-shield",
+                "when": {"purpose": "unit-test"}, "decision": "allow",
+            }],
+        }
+        status, body = self.post(json.dumps(payload).encode("utf-8"))
+        self.assertEqual(200, status)
+        self.assertEqual("allow", body["decision"])
+        self.assertEqual(["explicit"], body["matched_rule_ids"])
+
     def test_nonlocal_host_is_rejected(self):
         for host in ("example.invalid", "localhost.example.invalid", "127.0.0.1@evil.invalid"):
             with self.subTest(host=host):
