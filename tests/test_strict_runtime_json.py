@@ -69,8 +69,12 @@ class StrictRuntimeJsonTests(unittest.TestCase):
         self.assertEqual(200, status)
         self.assertEqual("allow", body["decision"])
         self.assertEqual(["explicit"], body["matched_rule_ids"])
-        self.assertIs(body["production_accepted"], False)
-        self.assertEqual("development-reference-runtime", body["scope"])
+        expected = {
+            "decision", "policy_id", "policy_version", "authority",
+            "subject", "resource", "action", "reason", "matched_rule_ids",
+            "obligations", "evaluated_at", "fresh",
+        }
+        self.assertEqual(expected, set(body))
 
     def test_nonlocal_host_is_rejected(self):
         for host in ("example.invalid", "localhost.example.invalid", "127.0.0.1@evil.invalid"):
