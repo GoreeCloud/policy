@@ -23,3 +23,7 @@ Development rule matching distinguishes absent context fields from explicitly pr
 Development parser rejects overflowing exponent floats; rule matching compares JSON boolean conditions without integer/boolean aliasing, including nested values.
 
 Solo-maintainer review: omitted `rule.when` is rejected; an explicitly provided empty object retains intentional broad-match semantics. Excessively nested JSON is rejected as HTTP 400 rather than causing an unhandled decoder recursion error. This remains a Development-only evaluator with no trusted external policy-provider integration.
+
+### Development HTTP request boundary — 2026-10-15
+
+Local-only API Host validation rejects DNS-rebinding Host aliases, browser Origin headers, and non-JSON POST media types. Existing local JSON requests still operate, and synthetic HTTP regressions cover all three rejections.
