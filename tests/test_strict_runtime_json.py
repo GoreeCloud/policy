@@ -60,6 +60,15 @@ class StrictRuntimeJsonTests(unittest.TestCase):
         self.assertEqual(400, status)
         self.assertEqual("error", response.get("decision"))
 
+    def test_omitted_when_is_rejected_over_http(self):
+        request = {"policy_id": "p", "policy_version": "1", "authority": "a",
+                   "subject": "s", "resource": "r", "action": "read"}
+        rule = {"rule_id": "x", "policy_id": "p", "policy_version": "1",
+                "authority": "a", "decision": "allow"}
+        code, body = self.post(json.dumps({"request": request, "rules": [rule]}).encode())
+        self.assertEqual(400, code)
+        self.assertEqual("error", body["decision"])
+
     def test_duplicate_input_is_rejected_over_http(self):
         status, response = self.post(b'{"request":{},"request":{}}')
         self.assertEqual(400, status)
