@@ -16,6 +16,24 @@ def _request_value(request: PolicyRequest, key: str) -> Any:
     return request.context.get(key)
 
 
+
+def _json_values_match(actual: Any, expected: Any) -> bool:
+    # Python treats True == 1 and False == 0. JSON policy input does not:
+    # a numeric assertion cannot satisfy a boolean condition, or vice versa.
+    if isinstance(actual, bool) or isinstance(expected, bool):
+        return type(actual) is type(expected) and actual == expected
+    if isinstance(actual, dict) and isinstance(expected, dict):
+        return actual.keys() == expected.keys() and all(
+            _json_values_match(actual[key], expected[key]) for key in actual
+        )
+    if isinstance(actual, list) and isinstance(expected, list):
+        return len(actual) == len(expected) and all(
+            _json_values_match(item, condition)
+            for item, condition in zip(actual, expected)
+        )
+    return actual == expected
+
+
 def _matches(request: PolicyRequest, rule: PolicyRule) -> bool:
     if (
         request.policy_id != rule.policy_id
@@ -26,7 +44,7 @@ def _matches(request: PolicyRequest, rule: PolicyRule) -> bool:
     for key, expected in rule.when.items():
         if key not in {"subject", "resource", "action"} and key not in request.context:
             return False
-        if _request_value(request, key) != expected:
+        if not _json_values_match(_request_value(request, key), expected):
             return False
     return True
 
