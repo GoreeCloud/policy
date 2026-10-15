@@ -35,3 +35,7 @@ Development API JSON responses now include Cache-Control: no-store and X-Content
 ### Source-stabilization checkpoint — 2026-10-15
 
 Loopback HTTP framing now rejects duplicate Host or Content-Length headers, Transfer-Encoding, malformed lengths and cross-site browser metadata. Synthetic negative requests fail before evaluation, while an authorized-looking but untrusted local test rule can still be evaluated in the Development reference runtime. No production rule provenance is established.
+
+### Development-to-production status boundary — 2026-10-15
+
+Development policy evaluation output now explicitly includes `scope: development-reference-runtime` and `production_accepted: false`, including results with `decision: allow`. An allow response does not establish verified rule provenance or production authorization.
