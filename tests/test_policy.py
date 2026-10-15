@@ -114,6 +114,36 @@ class PolicyTests(unittest.TestCase):
         result = evaluate(request, [self.rule("boolean", "allow", approved=True)])
         self.assertEqual(Decision.ALLOW, result.decision)
 
+    def test_missing_rule_conditions_are_rejected(self):
+        raw = {
+            "rule_id": "unintended-wildcard",
+            "policy_id": "privacy.export",
+            "policy_version": "1",
+            "authority": "privacy-shield",
+            "decision": "allow",
+        }
+        with self.assertRaisesRegex(ValueError, "explicitly provided"):
+            PolicyRule.from_mapping(raw)
+
+    def test_null_conditions_are_rejected(self):
+        raw = {
+            "rule_id": "null-conditions",
+            "policy_id": "privacy.export",
+            "policy_version": "1",
+            "authority": "privacy-shield",
+            "when": None,
+            "decision": "allow",
+        }
+        with self.assertRaisesRegex(ValueError, "must be an object"):
+            PolicyRule.from_mapping(raw)
+
+    def test_explicit_empty_conditions_remain_deliberate(self):
+        # Explicit {} retains documented unconditional matching semantics,
+        # but missing conditions can no longer silently become a wildcard.
+        rule = self.rule("explicitly-unconditional", "deny")
+        result = evaluate(self.request(), [rule])
+        self.assertEqual(Decision.DENY, result.decision)
+
     def test_invalid_decision_rejected(self):
         with self.assertRaises(ValueError):
             self.rule("bad", "maybe", purpose="user-request")
