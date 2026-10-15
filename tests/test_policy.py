@@ -51,6 +51,24 @@ class PolicyTests(unittest.TestCase):
         ])
         self.assertEqual(Decision.INDETERMINATE, result.decision)
 
+    def test_policy_identity_tuple_must_match(self):
+        base = self.request()
+        good_rule = self.rule("matching", "allow", purpose="user-request")
+        for attr in ("policy_id", "policy_version", "authority"):
+            with self.subTest(attr=attr):
+                raw = {
+                    "policy_id": base.policy_id,
+                    "policy_version": base.policy_version,
+                    "authority": base.authority,
+                    "subject": base.subject,
+                    "resource": base.resource,
+                    "action": base.action,
+                    "context": dict(base.context),
+                }
+                raw[attr] = "different"
+                request = PolicyRequest.from_mapping(raw)
+                self.assertEqual(Decision.INDETERMINATE, evaluate(request, [good_rule]).decision)
+
     def test_rule_authority_must_match(self):
         rule = PolicyRule.from_mapping({
             "rule_id": "wrong-authority",
