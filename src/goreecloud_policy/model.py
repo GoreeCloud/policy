@@ -106,8 +106,6 @@ class PolicyResult:
     def to_dict(self) -> dict[str, Any]:
         return {
             "decision": self.decision.value,
-            "scope": "development-reference-runtime",
-            "production_accepted": False,
             "policy_id": self.policy_id,
             "policy_version": self.policy_version,
             "authority": self.authority,
