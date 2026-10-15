@@ -31,3 +31,7 @@ Local-only API Host validation rejects DNS-rebinding Host aliases, browser Origi
 ### Concurrent stabilization audit — 2026-10-15
 
 Development API JSON responses now include Cache-Control: no-store and X-Content-Type-Options: nosniff; local HTTP regression verifies the response headers.
+
+### Source-stabilization checkpoint — 2026-10-15
+
+Loopback HTTP framing now rejects duplicate Host or Content-Length headers, Transfer-Encoding, malformed lengths and cross-site browser metadata. Synthetic negative requests fail before evaluation, while an authorized-looking but untrusted local test rule can still be evaluated in the Development reference runtime. No production rule provenance is established.
