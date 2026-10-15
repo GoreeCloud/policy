@@ -1,22 +1,22 @@
 # Policy v1 cross-system compatibility audit
 
-**Status: BLOCKED — development review only.**  
-**Review date:** 2026-10-15.  
-**Canonical decision schema:** `contracts/policy-decision.schema.json` (Policy v1, `additionalProperties: false`).  
-**Consumer source pins:** Manager and Privacy Shield use Policy revision `46071886da37a6566b69cc923005eef64cce2bcc`; Wardveil's Policy integration references the same contract revision.
+**Status: SOURCE CONTRACT CHECK PASSED; live integration and production acceptance remain outstanding.**  
+**Reviewed:** 2026-10-15  
+**Authoritative contract:** `contracts/policy-decision.schema.json` (v1, `additionalProperties: false`)  
+**Consumer pins:** Manager, Privacy Shield, and Wardveil refer to Policy contract revision `46071886da37a6566b69cc923005eef64cce2bcc`.
 
-## Verified source incompatibility
+## Finding and correction
 
-The canonical Policy v1 decision shape contains exactly twelve keys: `decision`, `policy_id`, `policy_version`, `authority`, `subject`, `resource`, `action`, `reason`, `matched_rule_ids`, `obligations`, `evaluated_at`, and `fresh`. The active development `PolicyResult.to_dict()` currently emits those twelve **plus** `scope` and `production_accepted`. Manager's `integrations/policy.py::validate_policy_decision` and Privacy Shield's `src/platform-policy-contract.mjs::validatePolicyDecisionEvidence` require the exact v1 shape and reject extra keys. Wardveil also documents exact v1 decision validation.
+An earlier Development candidate emitted `scope` and `production_accepted` in `PolicyResult.to_dict()`, although the published v1 decision schema admits exactly these twelve keys: `decision`, `policy_id`, `policy_version`, `authority`, `subject`, `resource`, `action`, `reason`, `matched_rule_ids`, `obligations`, `evaluated_at`, and `fresh`. Manager's `validate_policy_decision` and Privacy Shield's `validatePolicyDecisionEvidence` reject extra fields.
 
-**Consequence:** Successful local evaluation and passing Policy unit tests do not imply compatibility with the source-contract consumers. Do not merge or promote this PR.
+**Corrective commit:** `04d14e83974c7585cd2fd3c3ccbe1059a0613ae7` removed the noncontract fields. Updated unit/HTTP assertions and the new schema-driven contract regression enforce exactly the canonical v1 keys.
 
-## Required corrective acceptance
+**Verification:** exact-source GitHub CI succeeded at `813ffa6bf3186c0d51eacbfc5055b2841729be22`, running **34 tests**. The prior red contract-gate run is retained as evidence that the check detects the incompatible result shape. No v1 schema was widened.
 
-1. Restore the exact twelve-field Policy v1 decision result in `PolicyResult.to_dict()` and the `/v1/evaluate` response. Do not change the v1 schema or widen consumers to accept unrelated fields.
-2. Keep development-only/nonproduction status in `/healthz`, `/readyz`, or separate noncontract HTTP metadata; a Policy `allow` is decision evidence, not execution authority.
-3. Replace any tests that expect `scope`/`production_accepted` in decision JSON with assertions of the exact canonical field set. Add HTTP contract conformance tests for `allow`, `deny`, `indeterminate`, and errors as applicable.
-4. Verify compatibility with Manager and Privacy Shield source validators and Wardveil's v1 consumer before merge.
-5. Complete identity-backed caller verification, signed rule provenance, freshness/distribution/enforcement gates and representative runtime qualification before any production acceptance.
+## Remaining acceptance requirements
 
-**Execution note:** Attempts to patch the serializer directly were blocked by connected GitHub tool safety checks; no correction has been committed or verified. This record is an audit gate, not a certification or release approval.
+- Execute a consumer-level conformance exchange against Manager, Privacy Shield, and Wardveil at pinned/qualified revisions. Source/schema conformance alone does not establish a live interoperable service.
+- Keep Development-only status in `/healthz`/`/readyz`, not the versioned decision payload. A Policy `allow` remains decision evidence and does not confer enforcement or execution authority.
+- Qualify Identity-authenticated callers, trusted/signed rule provenance, freshness/distribution/enforcement, security/privacy boundaries, and target-environment recovery before production acceptance.
+
+**No merge, deployment, external reviewer approval, or Stable qualification is claimed.**
