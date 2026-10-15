@@ -37,8 +37,12 @@ class PolicyTests(unittest.TestCase):
             self.rule("allow-local", "allow", purpose="user-request")
         ]).to_dict()
         self.assertEqual("allow", result["decision"])
-        self.assertEqual("development-reference-runtime", result["scope"])
-        self.assertIs(result["production_accepted"], False)
+        expected = {
+            "decision", "policy_id", "policy_version", "authority",
+            "subject", "resource", "action", "reason", "matched_rule_ids",
+            "obligations", "evaluated_at", "fresh",
+        }
+        self.assertEqual(expected, set(result))
 
     def test_no_match_is_indeterminate_not_allow(self):
         result = evaluate(self.request(), [self.rule("other", "allow", purpose="different")])
