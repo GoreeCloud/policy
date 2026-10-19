@@ -19,6 +19,10 @@ This repository now contains a bounded reference implementation of deterministic
 - Contract 0.4 declaration covering all nine Integral Platform Systems.
 - Standard-library tests and CI.
 
+## GoreeCloud UI architectural succession
+
+**GoreeCloud UI (GC UI) is Integral Platform System 5 of 9, replacing Glaze and Glaze UI permanently.** This Policy reference service is currently headless; no visual interface or adoption is claimed. The [GC UI Platform Contract 2.1 candidate](docs/GC_UI_CONTRACT_2_1_CANDIDATE.md) and separate exact-revision CI evaluate truthful UI non-applicability without altering this repository's existing canonical 0.4 manifest, development lifecycle or runtime.
+
 ## Run locally
 
 ```bash
