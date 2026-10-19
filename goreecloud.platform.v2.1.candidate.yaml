@@ -1,0 +1,143 @@
+# Read-only, non-authoritative migration candidate. Canonical 0.4 manifest remains unchanged.
+schema_version: "2.1"
+component:
+  type: service
+  id: goreecloud-policy
+  product_name: GoreeCloud Policy
+  repository: GoreeCloud/policy
+
+# Conservative proposal only; NOT an accepted lifecycle transition from 0.4.
+lifecycle: lab
+lifecycle_metadata:
+  flags:
+    - blocked
+    - migration-required
+  deployment_state: development
+  qualification_state: not-started
+  next_gate: forge
+  candidate_identity: null
+  last_transition: null
+  evidence: []
+version: 0.1.0-dev
+supported_platforms:
+  - linux
+api:
+  versions:
+    - v1
+  endpoints:
+    - name: health
+      url: /healthz
+      purpose: Development reference-runtime process health, not platform readiness.
+    - name: readiness
+      url: /readyz
+      purpose: Development evaluator readiness without production acceptance.
+    - name: evaluate
+      url: /v1/evaluate
+      purpose: Local reference policy evaluation only.
+platform_systems:
+  manager:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Manager administrative lifecycle integration is not implemented.
+  privacy_shield:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - SPECIFICATIONS.md
+    notes: Privacy Shield owns privacy rules; production adapter and acceptance remain absent.
+  wardveil_security:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - SPECIFICATIONS.md
+    notes: Wardveil owns security rules; the runtime adapter is not accepted.
+  everkeep:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Durable definition backup, export, restore and recovery are not qualified.
+  gc_ui:
+    result: not-applicable-justified
+    version: null
+    evidence:
+      - README.md
+      - SPECIFICATIONS.md
+    notes: Policy is presently a headless service/reference evaluator and has no owned GUI; any future admin console, website, app or dashboard must adopt GoreeCloud UI as Integral Platform System 5 of 9 and pass independent runtime/a11y validation. No visual conformance is claimed here.
+  mesh:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Policy distribution and cross-component decision transport are not integrated with Mesh.
+    capabilities: []
+    dependencies: []
+    published_events: []
+    consumed_events: []
+  identity:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - SECURITY.md
+    notes: Production GoreeCloud Identity authentication and trusted actor context are not implemented.
+  policy:
+    result: not-applicable-justified
+    version: 0.1.0-dev
+    evidence:
+      - src/goreecloud_policy/engine.py
+      - tests/test_policy.py
+    notes: This repository implements the Policy authority itself; a separate Policy-to-Policy dependency is inapplicable.
+  observability:
+    result: applicable-blocked
+    version: null
+    evidence:
+      - PLANNED-FEATURES.md
+    notes: Production privacy-safe telemetry and operational evidence delivery are missing.
+health:
+  health_endpoint: /healthz
+  readiness_endpoint: /readyz
+continuity:
+  backup:
+    required: true
+    requirements:
+      - Include durable policy definitions, provenance and configuration in an accepted Everkeep backup scope.
+  restore:
+    required: true
+    requirements:
+      - Demonstrate restoration of future durable policy state before production.
+  export:
+    required: true
+    requirements:
+      - Keep policy definitions and provenance portable in documented formats.
+  portability:
+    required: true
+    requirements:
+      - Preserve implementation-independent, self-hostable evaluation contracts.
+external_dependencies: []
+compatibility:
+  platform_contract: "2.1"
+  gc_ui_required: null
+  requires:
+    - goreecloud-platform-contract==2.1
+  provides:
+    - goreecloud-policy-reference-evaluator-v1
+evidence:
+  acceptance_tests: []
+  release: []
+conformance:
+  status: nonconformant
+  validated_at: null
+  evidence:
+    - README.md
+    - SPECIFICATIONS.md
+    - src/goreecloud_policy/model.py
+    - src/goreecloud_policy/engine.py
+    - tests/test_policy.py
+  blockers:
+    - This is a versioned CI migration candidate, not a lifecycle or runtime acceptance.
+    - All applicable Manager, Privacy Shield, Wardveil Security, Everkeep, Mesh, Identity and Observability integrations remain blocked.
+    - Governed evidence of complete design applicability review, rollout, rollback and target-environment qualification is missing.
+    - Exact-head unit-test CI proves only bounded source behavior; production and Anchor acceptance are not granted.
+    - Durable policy lifecycle, signing, distribution, enforcement and recovery acceptance are incomplete.
